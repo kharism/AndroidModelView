@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.kharcustom.testframework"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="11"
+        android:targetSdkVersion="15" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.kharcustom.testframework.IbuListActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.kharcustom.testframework.IbuDetailActivity"
+            android:label="@string/title_ibu_detail"
+            android:parentActivityName=".IbuListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".IbuListActivity" />
+        </activity>
+        <activity
+            android:name="com.kharcustom.testframework.FormTester"
+            android:label="@string/title_activity_form_tester" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.kharcustom.testframework.DummyEditForm"
+            android:label="@string/title_activity_dummy_edit_form" >
+        </activity>
+    </application>
+
+</manifest>

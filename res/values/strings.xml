@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TestFramework</string>
+    <string name="title_ibu_detail">Ibu Detail</string>
+
+    <string-array name="menu_list">
+        <item>Ibu</item>
+        <item>Bayi</item>
+    </string-array>
+
+    <string name="title_activity_form_tester">FormTester</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_dummy_edit_form">DummyEditForm</string>
+
+</resources>
