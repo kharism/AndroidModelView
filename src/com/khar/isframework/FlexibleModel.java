@@ -3,9 +3,12 @@ package com.khar.isframework;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.khar.isframework.models.Ibu;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * a flexible model that uses map to store attributes, already implements setAttr and getAttr method
@@ -62,7 +65,11 @@ public abstract class FlexibleModel extends Model {
 		setScenario(p.readString());
 	}
 	
-	
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
@@ -81,5 +88,14 @@ public abstract class FlexibleModel extends Model {
 	public abstract Model fromCursor(Cursor c);
 	
 	public abstract String[] getTags();
+	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public FlexibleModel createFromParcel(Parcel in) {
+            return new Ibu(in); 
+        }
+
+        public FlexibleModel[] newArray(int size) {
+            return new FlexibleModel[size];
+        }
+    };	
 
 }

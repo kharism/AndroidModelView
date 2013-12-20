@@ -138,20 +138,6 @@ public class Ibu extends FlexibleModel {
 		return null;
 	}
 
-	@Override
-	public int describeContents() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-        public FlexibleModel createFromParcel(Parcel in) {
-            return new Ibu(in); 
-        }
-
-        public FlexibleModel[] newArray(int size) {
-            return new FlexibleModel[size];
-        }
-    };
 
 	
 }
