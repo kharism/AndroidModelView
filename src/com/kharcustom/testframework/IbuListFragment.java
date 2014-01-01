@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import com.khar.isframework.DataAccess;
 import com.khar.isframework.Model;
+import com.khar.isframework.ModelAdapter;
+import com.khar.isframework.ModelListFragment;
 import com.khar.isframework.SqliteDataAccess;
 import com.khar.isframework.models.Ibu;
 import com.kharcustom.testframework.dummy.DummyContent;
@@ -31,9 +33,7 @@ import com.kharcustom.testframework.dummy.DummyContent;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class IbuListFragment extends ListFragment {
-	DataAccess dataAccess;
-	IbuAdapter adapter;
+public class IbuListFragment extends ModelListFragment {	
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
 	 * activated item position. Only used on tablets.
@@ -90,7 +90,6 @@ public class IbuListFragment extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		dataAccess = new SqliteDataAccess(getActivity().getApplicationContext());
 		Ibu ibu = new Ibu(dataAccess);
 		List<Model> ibus = ibu.findAll();
 		adapter = new IbuAdapter(getActivity(), ibus);
@@ -121,7 +120,6 @@ public class IbuListFragment extends ListFragment {
 			throw new IllegalStateException(
 					"Activity must implement fragment's callbacks.");
 		}
-
 		mCallbacks = (Callbacks) activity;
 	}
 
@@ -173,41 +171,20 @@ public class IbuListFragment extends ListFragment {
 
 		mActivatedPosition = position;
 	}
-	class IbuAdapter extends ArrayAdapter<Model>{
-		List<Ibu> ibus;
-		Context context;
-		int selected;
+	class IbuAdapter extends ModelAdapter{
+		
 		public IbuAdapter(Context context, List<Model> objects) {
 			super(context, R.layout.ibu_list_view, objects);
-			ibus = new ArrayList<Ibu>();
-			for(int i=0;i<objects.size();i++){
-				ibus.add((Ibu)objects.get(i));
-			}
-			this.context = context;
-			selected = -1;
+			models = objects;
 		}
-		public void setItems(List<Model> models){
-			ibus.removeAll(ibus);
-			for(int i=0;i<models.size();i++){
-				ibus.add((Ibu)models.get(i));
-			}
-			notifyDataSetChanged();
-		}
-		@Override
-		public int getCount() {
-			return ibus.size();
-		}
-		@Override
-		public Ibu getItem(int position) {
-			return ibus.get(position);
-		}
+
 		
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View rowView = inflater.inflate(R.layout.ibu_list_view, parent, false);
 			TextView tv = (TextView)rowView.findViewById(R.id.nama_ibu);
-			tv.setText((String)ibus.get(position).getAttribute("nama"));
+			tv.setText((String)models.get(position).getAttribute("nama"));
 			if(position==selected){
 				rowView.setBackgroundColor(Color.GRAY);
 			}
