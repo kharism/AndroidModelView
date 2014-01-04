@@ -16,6 +16,11 @@
         <activity
             android:name="com.kharcustom.testframework.IbuListActivity"
             android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.kharcustom.testframework.IbuDetailActivity"
@@ -28,15 +33,18 @@
         <activity
             android:name="com.kharcustom.testframework.FormTester"
             android:label="@string/title_activity_form_tester" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="com.kharcustom.testframework.DummyEditForm"
             android:label="@string/title_activity_dummy_edit_form" >
+        </activity>
+        <activity
+            android:name="com.kharcustom.testframework.GenericForm"
+            android:label="@string/title_activity_generic_form" >
+        </activity>
+        <activity
+            android:name="com.kharcustom.testframework.DummyDetailActivity"
+            android:label="@string/title_activity_dummy_detail" >
         </activity>
     </application>
 
