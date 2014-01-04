@@ -1,6 +1,6 @@
 package com.khar.isframework;
 
-import com.kharcustom.testframework.IbuListFragment.Callbacks;
+import com.khar.isframework.models.ibu.IbuListFragment.Callbacks;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -17,6 +17,9 @@ public class ModelListFragment extends ListFragment{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		dataAccess = new SqliteDataAccess(getActivity().getApplicationContext());
+	}
+	public void refresh(){
+		onResume();
 	}
 	/**
 	 * A dummy implementation of the {@link Callbacks} interface that does

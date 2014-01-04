@@ -7,6 +7,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+/**
+ * build criteria for querying
+ * @author kharisma
+ *
+ */
 public class Query {
 	String whereClause;
 	String onClause;

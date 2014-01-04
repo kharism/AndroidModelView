@@ -1,20 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
     <item
-        android:id="@+id/action_tambah_data"
+        android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:showAsAction="always"
-        android:title="Tambah data"/>
-    <item
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
+	<item
         android:id="@+id/action_edit"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:visible="false"
-        android:title="Edit"/>
+        android:title="@string/action_edit"/>
 	<item
         android:id="@+id/action_delete"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:visible="false"
-        android:title="Delete"/>
+        android:title="@string/action_delete"/>
 </menu>

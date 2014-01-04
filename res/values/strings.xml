@@ -3,15 +3,22 @@
 
     <string name="app_name">TestFramework</string>
     <string name="title_ibu_detail">Ibu Detail</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="empty_item">Tidak ada Item terpilih</string>
 
     <string-array name="menu_list">
         <item>Ibu</item>
-        <item>Bayi</item>
+        <item>Rumah Sakit</item>
     </string-array>
 
     <string name="title_activity_form_tester">FormTester</string>
     <string name="action_settings">Settings</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_delete">Delete</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_dummy_edit_form">DummyEditForm</string>
-
+    <string name="title_activity_generic_form">GenericForm</string>
+    <string name="title_activity_dummy_detail">DummyDetailActivity</string>
+	
 </resources>

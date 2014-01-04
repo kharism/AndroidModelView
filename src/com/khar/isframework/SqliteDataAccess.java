@@ -15,7 +15,7 @@ public class SqliteDataAccess implements DataAccess {
 
 	@Override
 	public long save(String tableName, ContentValues values) {
-		if(values.containsKey("id")){
+		if(values.containsKey("id")&&values.getAsInteger("id")!=null){
 			_database.update(tableName, values, "id="+values.getAsString("id"), null);
 			return (long)values.getAsInteger("id");
 		}			

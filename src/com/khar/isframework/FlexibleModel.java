@@ -3,7 +3,8 @@ package com.khar.isframework;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.khar.isframework.models.Ibu;
+import com.khar.isframework.models.ibu.Ibu;
+import com.khar.isframework.models.rs.RumahSakit;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -51,7 +52,12 @@ public abstract class FlexibleModel extends Model {
 	 * @param value (string only please)
 	 */
 	public void setAttribute(String attributeName, Object value) {
-		_attr.put(attributeName, (String)value);
+		try{
+			_attr.put(attributeName, (String)value);
+		}
+		catch(ClassCastException ex){
+			_attr.put(attributeName, String.valueOf(value));
+		}
 	}
 	
 	public FlexibleModel(Parcel p) {
@@ -74,12 +80,16 @@ public abstract class FlexibleModel extends Model {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		String[] attr = getAttributes();
+		dest.writeString(getTableName());
 		for(int i=0;i<attr.length;i++){
 			String j = (String)getAttribute(attr[i]);
 			dest.writeString(j);
 		}
 		dest.writeString(getScenario());
 	}
+	
+	
+	public abstract FlexibleModel fromParcel(Parcel in);
 
 	@Override
 	public  abstract void fillFieldFromCursor(Cursor c);
@@ -88,9 +98,14 @@ public abstract class FlexibleModel extends Model {
 	public abstract Model fromCursor(Cursor c);
 	
 	public abstract String[] getTags();
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+	public static Parcelable.Creator<FlexibleModel> CREATOR = new Parcelable.Creator<FlexibleModel>() {
         public FlexibleModel createFromParcel(Parcel in) {
-            return new Ibu(in); 
+            String tableName = in.readString();
+            if(tableName.equals("ibu"))
+        	return new Ibu(in);
+            else if(tableName.equals("rumah_sakit"))
+            	return new RumahSakit(in);
+            else return null;
         }
 
         public FlexibleModel[] newArray(int size) {

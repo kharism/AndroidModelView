@@ -1,26 +1,32 @@
 package com.kharcustom.testframework;
 
 import com.khar.isframework.DataAccess;
+import com.khar.isframework.FlexibleModel;
 import com.khar.isframework.Model;
 import com.khar.isframework.SqliteDataAccess;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 
 public class DummyEditForm extends Activity {
-	Model m;
+	FlexibleModel m;
 	DataAccess dataAccess;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		dataAccess = new SqliteDataAccess(getApplicationContext());
-		
-		m=getIntent().getParcelableExtra("model");
-		m.setDataAccess(dataAccess);
-		View v = m.getView(getApplicationContext());
-		setContentView(v);
+		Intent i =getIntent(); 
+		if(i.hasExtra("model"))
+		{
+			m=(FlexibleModel)i.getParcelableExtra("model");
+			m.setDataAccess(dataAccess);
+			setTitle(m.getTableName());
+			View v = m.getView(this);
+			setContentView(v);
+		}
 		
 	}
 

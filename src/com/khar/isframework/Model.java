@@ -25,6 +25,7 @@ public abstract class Model implements Parcelable{
 	public static String EDIT="com.khar.isframework.model.edit";
 	public static String CREATE="com.khar.isframework.model.create";
 	public static String SEARCH="com.khar.isframework.model.search";
+	public static String VIEW="com.khar.isframework.model.search";
 	protected DataAccess database;
 	private String scenario;
 	protected long id;
@@ -88,7 +89,7 @@ public abstract class Model implements Parcelable{
 	 * @return
 	 */
 	public abstract View getView(Context c,String mode);
-	public abstract View getView(int accessLevel,Context c,String mode);
+	public abstract View getView(int accessLevel,Context c);
 	/**
 	 * fill this objects attributes from generated view
 	 * @param v

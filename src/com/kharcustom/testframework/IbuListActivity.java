@@ -1,9 +1,16 @@
 package com.kharcustom.testframework;
 
+import java.util.List;
+
 import com.khar.isframework.DataAccess;
 import com.khar.isframework.Model;
+import com.khar.isframework.ModelListFragment;
+import com.khar.isframework.Query;
 import com.khar.isframework.SqliteDataAccess;
-import com.khar.isframework.models.Ibu;
+import com.khar.isframework.models.ibu.Ibu;
+import com.khar.isframework.models.ibu.IbuListFragment;
+import com.khar.isframework.models.rs.RSListFragment;
+import com.khar.isframework.models.rs.RumahSakit;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -43,12 +50,16 @@ public class IbuListActivity extends FragmentActivity implements
 	 * device.
 	 */
 	private boolean mTwoPane;
+	private static final String DETIL_FRAGMENT_TAG="ooo";
 	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private DataAccess da;
     private ActionBarDrawerToggle mDrawerToggle;
     private ModuleMenuHandler currentModule;
     private Menu menu;
+    private int selectedItem;
+    private ModelListFragment currListFragment;
+    private Fragment currDetilFragment;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,11 +72,11 @@ public class IbuListActivity extends FragmentActivity implements
 			// res/values-sw600dp). If this view is present, then the
 			// activity should be in two-pane mode.
 			mTwoPane = true;
-
 			// In two-pane mode, list items should be given the
 			// 'activated' state when touched.
-			((IbuListFragment) getSupportFragmentManager().findFragmentById(
-					R.id.ibu_list)).setActivateOnItemClick(true);
+			/*((IbuListFragment) getSupportFragmentManager().findFragmentById(
+					R.id.ibu_list)).setActivateOnItemClick(true);*/
+						
 		}
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -106,9 +117,13 @@ public class IbuListActivity extends FragmentActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.generic_menu, menu);
 		this.menu = menu;
-		return true;
-		
+		if(mTwoPane){
+			menu.findItem(R.id.action_edit).setVisible(true);
+			menu.findItem(R.id.action_delete).setVisible(true);
+		}
+		return true;		
 	}
+	
 	public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
@@ -116,15 +131,26 @@ public class IbuListActivity extends FragmentActivity implements
         return super.onPrepareOptionsMenu(menu);
     }
 	/**
-	 * Draer Menu handler
+	 * Drawer Menu handler
 	 * @param position
 	 */
 	private void selectItem(int position){
 		if(position ==0){
 			Fragment f = new IbuListFragment();
+			currListFragment = (ModelListFragment) f;
 			getSupportFragmentManager().beginTransaction().replace(R.id.ibu_list, f).commit();
 			currentModule = new IbuModuleHandler();
 		}
+		else if(position==1){
+			Fragment f = new RSListFragment();
+			currListFragment = (ModelListFragment) f;
+			getSupportFragmentManager().beginTransaction().replace(R.id.ibu_list, f).commit();
+			currentModule = new RSModuleHandler();
+		}
+		Fragment f = getSupportFragmentManager().findFragmentByTag(DETIL_FRAGMENT_TAG);
+		//getSupportFragmentManager().beginTransaction().replace(R.id.ibu_detail_container, new EmptyDetilFragment()).commit();
+		if(f!=null)
+		getSupportFragmentManager().beginTransaction().remove(f).commit();
 	}
 	
 	@Override
@@ -141,6 +167,13 @@ public class IbuListActivity extends FragmentActivity implements
 		case R.id.action_tambah_data:
 			currentModule.addItem();
 			return true;
+		case R.id.action_delete:
+			currentModule.deleteItem();
+			currListFragment.refresh();
+			return true;
+		case R.id.action_edit:
+			currentModule.editItem();
+			return true;
 		}
 		return super.onMenuItemSelected(featureId, item);
 	}
@@ -148,24 +181,34 @@ public class IbuListActivity extends FragmentActivity implements
 		protected Class detilActivity;
 		protected Fragment detilFragment;
 		protected String intentKey;
+		protected Model model;
 		@Override
 		public void selectItem(int selection) {
+			selectedItem = selection;
 			String id = String.valueOf(selection);
 			if (mTwoPane) {
 				// In two-pane mode, show the detail view in this activity by
 				// adding or replacing the detail fragment using a
 				// fragment transaction.
+				currDetilFragment = detilFragment;
 				Bundle arguments = new Bundle();
-				arguments.putString(IbuDetailFragment.ARG_ITEM_ID, id);
+				Query q = new Query();
+				q.addWhere("id="+id);
+				List<Model> models = model.findAll(q);
+				arguments.putParcelable(intentKey, models.get(0));
 				detilFragment.setArguments(arguments);
+				
 				getSupportFragmentManager().beginTransaction()
-						.replace(R.id.ibu_detail_container, detilFragment).commit();
-
+						.replace(R.id.ibu_detail_container, detilFragment,DETIL_FRAGMENT_TAG).commit();
+				detilFragment = generateDetailFragment();
 			} else {
 				// In single-pane mode, simply start the detail activity
 				// for the selected item ID.
-				Intent detailIntent = new Intent(IbuListActivity.this, IbuDetailActivity.class);
-				detailIntent.putExtra(intentKey, id);
+				Intent detailIntent = new Intent(IbuListActivity.this, detilActivity);
+				Query q = new Query();
+				q.addWhere("id="+id);
+				Model model2 = model.findAll(q).get(0);
+				detailIntent.putExtra("model", model2);
 				startActivity(detailIntent);
 			}
 		}
@@ -174,30 +217,62 @@ public class IbuListActivity extends FragmentActivity implements
 		public void resume() {
 			getFragmentManager().findFragmentById(R.id.ibu_list);
 		}
+		
+		protected Fragment generateDetailFragment(){
+			return null;
+		}
 
 		@Override
 		public void addItem() {
-			
+				Intent i = new Intent(getApplicationContext(), DummyEditForm.class);
+				i.putExtra("model", model);
+				startActivity(i);			
 		}
 
 		@Override
 		public void editItem() {
-			// TODO Auto-generated method stub
-			
+			Query q = new Query();
+			q.addWhere("id="+String.valueOf(selectedItem));
+			Model m = model.findAll(q).get(0);
+			Intent i = new Intent(IbuListActivity.this, DummyEditForm.class);
+			m.setScenario(Model.EDIT);
+			i.putExtra("model", m);
+			startActivity(i);
 		}
 
 		@Override
 		public void deleteItem() {
-			// TODO Auto-generated method stub
-			
+			Query q = new Query();
+			q.addWhere("id="+String.valueOf(selectedItem));
+			Model m = model.findAll(q).get(0);
+			m.delete();
 		}
 		
 	}
 	public class IbuModuleHandler extends BaseModuleHandler{
 		public IbuModuleHandler() {
-			detilActivity = IbuDetailActivity.class;
-			detilFragment = new IbuDetailFragment();
-			intentKey = IbuDetailFragment.ARG_ITEM_ID;
+			detilActivity = DummyDetailActivity.class;
+			detilFragment = new DummyDetailFragment();
+			intentKey = DummyDetailFragment.MODEL;
+			model = new Ibu(da);
+		}
+		@Override
+		protected Fragment generateDetailFragment() {
+			// TODO Auto-generated method stub
+			return new DummyDetailFragment();
+		}
+	}
+	public class RSModuleHandler extends BaseModuleHandler{
+		public RSModuleHandler() {
+			detilActivity = DummyDetailActivity.class;
+			detilFragment = new DummyDetailFragment();
+			intentKey = DummyDetailFragment.MODEL;
+			model = new RumahSakit(da);
+		}
+		@Override
+		protected Fragment generateDetailFragment() {
+			// TODO Auto-generated method stub
+			return new DummyDetailFragment();
 		}
 	}
 	/**

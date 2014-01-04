@@ -6,7 +6,7 @@ import com.khar.isframework.DataAccess;
 import com.khar.isframework.Model;
 import com.khar.isframework.Query;
 import com.khar.isframework.SqliteDataAccess;
-import com.khar.isframework.models.Ibu;
+import com.khar.isframework.models.ibu.Ibu;
 
 import android.content.Intent;
 import android.os.Bundle;
