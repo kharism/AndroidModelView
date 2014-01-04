@@ -157,6 +157,7 @@ public class IbuListActivity extends FragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 		currentModule.resume();
+		
 	}
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
@@ -215,7 +216,18 @@ public class IbuListActivity extends FragmentActivity implements
 
 		@Override
 		public void resume() {
-			getFragmentManager().findFragmentById(R.id.ibu_list);
+			if(mTwoPane&& selectedItem>0){
+				Bundle arguments = new Bundle();
+				Query q = new Query();
+				q.addWhere("id="+String.valueOf(selectedItem));
+				List<Model> models = model.findAll(q);
+				arguments.putParcelable(intentKey, models.get(0));
+				detilFragment.setArguments(arguments);
+				
+				getSupportFragmentManager().beginTransaction()
+						.replace(R.id.ibu_detail_container, detilFragment,DETIL_FRAGMENT_TAG).commit();
+				detilFragment = generateDetailFragment();
+			}
 		}
 		
 		protected Fragment generateDetailFragment(){
