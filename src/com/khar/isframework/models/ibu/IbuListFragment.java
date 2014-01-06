@@ -134,15 +134,7 @@ public class IbuListFragment extends ModelListFragment {
 		mCallbacks = sDummyCallbacks;
 	}
 
-	@Override
-	public void onListItemClick(ListView listView, View view, int position,
-			long id) {
-		super.onListItemClick(listView, view, position, id);
 
-		// Notify the active callbacks interface (the activity, if the
-		// fragment is attached to one) that an item has been selected.
-		mCallbacks.onItemSelected((String)adapter.getItem(position).getAttribute("id"));
-	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {

@@ -65,7 +65,7 @@ public class IbuListActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_ibu_list);
 		da = new SqliteDataAccess(getApplicationContext());
-		currentModule = new IbuModuleHandler();
+		currentModule = new RSModuleHandler();
 		if (findViewById(R.id.ibu_detail_container) != null) {
 			// The detail container view will be present only in the
 			// large-screen layouts (res/values-large and
@@ -109,7 +109,7 @@ public class IbuListActivity extends FragmentActivity implements
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
+            selectMenuItem(position);
             mDrawerLayout.closeDrawers();
         }
     }
@@ -134,7 +134,7 @@ public class IbuListActivity extends FragmentActivity implements
 	 * Drawer Menu handler
 	 * @param position
 	 */
-	private void selectItem(int position){
+	private void selectMenuItem(int position){
 		if(position ==0){
 			Fragment f = new IbuListFragment();
 			currListFragment = (ModelListFragment) f;
@@ -211,6 +211,7 @@ public class IbuListActivity extends FragmentActivity implements
 				Model model2 = model.findAll(q).get(0);
 				detailIntent.putExtra("model", model2);
 				startActivity(detailIntent);
+				return;
 			}
 		}
 
